@@ -75,6 +75,12 @@ mkdir -p "${FOLDER_BUILD}/initrd"
 if [ ! -f "${DEBIAN_ISO_FILE}" ]; then
     info "Downloading ${DEBIAN_ISO_NAME}..."
     curl --progress-bar -o "${DEBIAN_ISO_FILE}" -L "${DEBIAN_ISO_URL}"
+    minimumsize=100
+    actualsize=$(du -b "${DEBIAN_ISO_FILE}" | cut -f 1)
+    if [ $actualsize -lt $minimumsize ]; then
+        echo "Downloaded ${DEBIAN_ISO_FILE} is too small"
+        exit 0
+    fi
 fi
 
 # Command to get MD5 hash from server
